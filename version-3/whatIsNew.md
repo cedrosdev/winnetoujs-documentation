@@ -202,13 +202,14 @@ WinnetouJs setting file is extremely simpler.
 We recommend you to use sass. Create this scripts in your package.json:
 
 ```json
-  "scripts": {
 
+"scripts": {
     "wbr:prod": "node wbr -b -p",
     "wbr:dev": "node wbr -b -v --watch",
+    "sass:app:dev": "sass --style expanded --watch --embed-sources sass/app.scss:../../Public/reports/dist/css/app.css",
+    "sass:login:dev": "sass --embed-sources --watch --style expanded sass/login.scss:../../Public/reports/dist/css/login.css",
+    "sass:app:prod": "sass sass/app.scss:../../Public/reports/dist/css/app.css --style compressed --no-source-map --quiet",
+    "sass:login:prod": "sass sass/login.scss:../../Public/reports/dist/css/login.css --style compressed --no-source-map --quiet"
+},
 
-    "sass:dev": "sass src/sass/main.scss:dist/css/development/bundle.min.css --style expanded --source-map --watch",
-    "sass:prod": "sass src/sass/main.scss:dist/css/production/bundle.min.css --style compressed --no-source-map --quiet"
-
-  },
 ```
