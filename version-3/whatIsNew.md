@@ -4,6 +4,22 @@ WinnetouJs has shifted its primary focus toward exceptional speed and top-notch 
 
 ## Main changes
 
+### WinnetouJs Modules
+
+Winnetou was divided in modules in order to user can import only what is important for project. Modules are:
+
+- colorThemes
+- router
+- select
+- style
+- translations
+
+To use modules, import methods like:
+
+```javascript
+import { Router } from "winnetoujs/modules/router";
+```
+
 ### ESBuild Engine
 
 We have replaced Webpack in order to use esbuild.
@@ -23,6 +39,35 @@ Now must be called on app startup
 ### WStyle Philosophy
 
 It's not a WinnetouJs feature, it's a javascript methodology.
+
+```javascript
+import { wstyle } from "winnetoujs/modules/style";
+export const leftMenu = wstyle({
+  width: "100%",
+  height: "50px",
+  color: "white",
+  "border-radius": "5px",
+  display: "flex",
+  "align-items": "center",
+  "justify-content": "center",
+  cursor: "pointer",
+  "font-size": "16px",
+  "text-transform": "uppercase",
+});
+```
+
+And then put the style in `style` class of constructo:
+
+```javascript
+import { leftMenu } from "./styles";
+new $leftMenu({
+  onclick: "",
+  style: leftMenu,
+  text: strings.endpoints,
+}).create(this.output);
+```
+
+> Be careful, Winnetou Styles can increase the final bundle size, use wisely.
 
 ### Typescript
 
@@ -83,4 +128,87 @@ In Visual Studio Code use search.exclude to not show transpile constructos files
     "**/*.code-search": true,
     "**/*.wcto.js": true
 }
+```
+
+### Router
+
+This is a new router paradigm, that allow user to use go to reference:
+
+```javascript
+import { Router } from "winnetoujs/modules/router";
+import { Settings } from "../constructos/settings/settings";
+
+class MyRouter_ {
+  constructor() {
+    this.createRoutes();
+  }
+  /** @private */
+  routes = {};
+
+  methods = {
+    settings: {
+      go: () => Router.navigate("/settings"),
+      set: () => {
+        this.routes["/settings"] = () => {
+          new Settings("right-win-base").render();
+        };
+      },
+    },
+  };
+
+  /** @private */
+  createRoutes() {
+    Object.keys(this.methods).forEach(key => {
+      this.methods[key].set();
+    });
+    Router.createRoutes(this.routes);
+  }
+}
+
+export const MyRouter = new MyRouter_();
+```
+
+### WBR
+
+WBR hasn't transpile method anymore. It'll always compile bundle because esbuild is ultra fast.
+Args has this settings:
+
+```javascript
+program
+  .name("wbr")
+  .description("Winnetou Bundle Runtime (WBR) - Version 3")
+  .version("3.0.0")
+  .option("-w, --watch", "Watch mode")
+  .option("-b,--bundleRelease", "Compile project")
+  .option("-p, --production", "Production mode")
+  .option("-v, --verbose", "Verbose output")
+  .parse();
+```
+
+# win.config.json
+
+WinnetouJs setting file is extremely simpler.
+
+```json
+{
+  "apps": ["./src/ts/app.ts"],
+  "outputDir": "./dist/js",
+  "constructosSourceFolder": "./src/constructos"
+}
+```
+
+# Sass integration
+
+We recommend you to use sass. Create this scripts in your package.json:
+
+```json
+  "scripts": {
+
+    "wbr:prod": "node wbr -b -p",
+    "wbr:dev": "node wbr -b -v --watch",
+
+    "sass:dev": "sass src/sass/main.scss:dist/css/development/bundle.min.css --style expanded --source-map --watch",
+    "sass:prod": "sass src/sass/main.scss:dist/css/production/bundle.min.css --style compressed --no-source-map --quiet"
+
+  },
 ```
