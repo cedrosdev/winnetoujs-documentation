@@ -93,10 +93,19 @@ calculation to do. And reverse f12 works as well.
 Now updateTranslations has a new calling method (note that `translationPublicPath` is declared directly within the method, not in win.config.json):
 
 ```javascript
-W.updateTranslations({
+import { updateTranslations } from "winnetoujs/modules/translations";
+import strings from "./en-us";
+
+updateTranslations({
   stringsClass: strings,
-  translationsPublicPath: "/translationsFiles",
-}).then(res => app.start());
+  translationsPublicPath: "/reports/translations",
+}).then(() => {
+  startApp();
+});
+
+async function startApp() {
+  console.log(strings.title);
+}
 ```
 
 Inside `/translationsFiles` folder, put the json translations files as usual. Do not put original language json file in `translationsPublicPath` in
@@ -114,6 +123,28 @@ Now must provide compiled constructos js files because wbr doesn't search node_m
 ### Constructos
 
 WinnetouJs now uses folder paradigm, which provides a better readability for large projects. It mean that wbr will transpile constructos directly in the folder where placed wcto.html file.
+
+Now constructos must be initialized with `new` token and contains a `$` token to identify it.
+
+```javascript
+async function startApp() {
+  new $div({ content: "test" }).create("#app");
+}
+```
+
+#### Constructos props
+
+Now winnetoujs has more prop options
+
+```javascript
+{{?display(set visibility of constructo):"flex"|"none"}}
+```
+
+Use `:` to create types for props.
+
+Use `()` to write prop description.
+
+Use `?` to set prop as optional.
 
 ### Files Naming
 
