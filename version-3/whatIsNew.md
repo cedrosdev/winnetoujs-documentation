@@ -26,7 +26,25 @@ We have replaced Webpack in order to use esbuild.
 
 ### Sass
 
-We have discontinued the embedded compilation of sass.
+We have discontinued the embedded compilation of sass. But we encourage you to keep use sass in winnetou projects. The best way to do it is:
+
+```json
+    "sass:app:dev": "sass --style expanded --watch --embed-sources sass/app.scss:../../Public/reports/dist/css/app.css --load-path='./_constructos'",
+    "sass:login:dev": "sass --embed-sources --watch --style expanded sass/login.scss:../../Public/reports/dist/css/login.css  --load-path='./_constructos'",
+    "sass:app:prod": "sass sass/app.scss:../../Public/reports/dist/css/app.css --style compressed --no-source-map --quiet  --load-path='./_constructos'",
+    "sass:login:prod": "sass sass/login.scss:../../Public/reports/dist/css/login.css --style compressed --no-source-map --quiet  --load-path='./_constructos'"
+```
+
+Note the use of `--load-path` attribute. It ensure that watch files will recompile your css even you edit scss inside constructos folders:
+
+```css
+@use "./test.scss";
+@use "app/mainFrame/mainFrame";
+```
+
+In `./_constructos/app/mainFrame` folder create a `_mainFrame.scss` file. When import it to entry scss file, just use `app/mainFrame/mainFrame` statement.
+
+In this way you can keep your scss file around wcto.html constructos files, increase readability and navigation.
 
 ### VDOM
 
@@ -244,3 +262,11 @@ We recommend you to use sass. Create this scripts in your package.json:
 },
 
 ```
+
+### Script type="module"
+
+Esbuild output use `esm` module imports, so you need to use type="module" when add script tag.
+
+### Clear output
+
+Clear output is discontinued, if you need a clean compilation, first delete dist folder
