@@ -4,6 +4,8 @@ WinnetouJs has shifted its primary focus toward exceptional speed and top-notch 
 
 ## Main changes
 
+Now, constructos and WinnetouJs functions are tree-shakable which means that you only will compile to final bundle what you really use.
+
 ### WinnetouJs Modules
 
 Winnetou was divided in modules in order to user can import only what is important for project. Modules are:
@@ -133,6 +135,19 @@ winnetou.js it self. It's more efficient.
 ### Icons
 
 Do not digest icons anymore. Icons libraries has their own integration methods which is most of the time the fasted way and also makes the final winnetou bundle lighter.
+
+We recommend you to use `lucide` npm package.
+
+```javascript
+import { createElement, Menu } from "lucide";
+const menuIcon = createElement(Menu).outerHTML;
+// ...
+new $menuItem({
+  text: strings.home,
+  icon: menuIcon,
+  chevron: "",
+}).create(output);
+```
 
 ### Plugins
 
