@@ -46,6 +46,23 @@ Add these config to workspace settings in order to hide wcto.js generated files:
 }
 ```
 
+### jsconfig.json
+
+To obtain auto completions for constructos use this config in jsconfig.json (put it in root):
+
+```json
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2022",
+    "checkJs": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
+```
+
 ### NPM scripts
 
 To maximize performance when compiling, add these settings to `package.json` file:
@@ -74,19 +91,19 @@ application/
 │   ├── app.ts
 │   ├── dashboard/
 │   │   ├── dashboard.wcto.html
-│   │   ├── dashboard.scss
+│   │   ├── _dashboard.scss
 │   │   └── dashboard.ts
 │   ├── chart-card/
 │   │   ├── chart-card.wcto.html
-│   │   ├── chart-card.scss
+│   │   ├── _chart-card.scss
 │   │   └── chart-card.ts
 │   ├── menu-item/
 │   │   ├── menu-item.wcto.html
-│   │   ├── menu-item.scss
+│   │   ├── _menu-item.scss
 │   │   └── menu-item.ts
 │   └── sidebar/
 │       ├── sidebar.wcto.html
-│       ├── sidebar.scss
+│       ├── _sidebar.scss
 │       └── sidebar.ts
 ├── app/
 │   ├── en-us.ts
@@ -99,4 +116,125 @@ application/
 ├── wbr.config.json
 ├── wbr.js
 └── README.md
+```
+
+### Constructos html structure
+
+- Every constructo must be created inside `<winnetou>` tags, like:
+
+```html
+<winnetou>
+  <div id="[[myDiv]]">{{content}}</div>
+</winnetou>
+```
+
+Attention: Do not duplicate <winnetou> tag, like `<winnetou></winnetou>... rest of code</winnetou>`, it is a bad pattern. Avoid it. Winnetou tag must be: `<winnetou> ...content </winnetou>`.
+
+- Winnetou tags can have description attr to describe constructo:
+
+```html
+<winnetou description="A price card">...content</winnetou>
+```
+
+### Constructos ID
+
+- Ids must be inside double square-brackets `[[id]]`.
+- When a constructo html file is compiled, the id of constructo will be the name of class when it is imported into code, like:
+
+```html
+<winnetou>
+  <div id="[[myFirstDiv]]"></div>
+</winnetou>
+```
+
+Will be compiled to `$myFirstDiv`, like:
+
+```javascript
+import { $myFirstDiv } from "./commonConstructos.wcto";
+new $myFirstDiv().create("#app");
+```
+
+- ids will be returned by `create` method, like:
+
+```javascript
+const myConstructo = new $myFirstDiv().create("#app");
+console.log(myConstructo.ids.myFirstDiv); // myFirstDiv-win-1
+```
+
+When constructos are placed in html, WinnetouJs will create a string id to it, with this formula: `originalId-win-randomNumber`. User can override randomNumber with `identifier` option:
+
+```javascript
+let left = new $myDiv({}, { identifier: "leftDiv" }).create("#app");
+console.log(left.ids.myDiv); // "myDiv-win-leftDiv"
+```
+
+This is useful for DOM manipulations.
+
+- constructos can have many ids inside it, first id will be constructo class name, all ids will be returned in create method:
+
+```html
+<winnetou>
+  <div id="[[mainId]]">
+    <span id="[[text1]]">{{title}}</span>
+    <span id="[[text2]]">{{text}}</span>
+  </div>
+</winnetou>
+```
+
+```javascript
+const card = $mainId().create("#app").ids;
+document.getElementById(card.text1).style.color = "blue";
+```
+
+### Constructos props
+
+- To create props, use double-brackets `{{prop}}`.
+- Props can be optional, use ? token to do it: `{{color?}}`
+- Props can have typescript/jsdoc types, use : token to do it: `{{color:string}}`
+- Props can have a description, use parenthesis to do it: `{{color(A RGB value)}}`
+- All options can be mixed, like: `{{color(A rgb value)?:string}}`
+
+Example of constructos with props:
+
+```html
+<winnetou description="Personalized title string">
+  <h1 id="[[personalizedTitle]]" class="{{class:'normal'|'danger'}}">
+    {{text(The text of title):string}}
+  </h1>
+</winnetou>
+```
+
+```javascript
+import { $personalizedTitle } from "./titles.wcto";
+new $personalizedTitle({
+  class: "danger",
+  text: "This is a title",
+}).create("#app");
+```
+
+### Constructos Methods
+
+- Constructos has two methods: `create()` and `constructoString()`.
+
+#### create(id:string)
+
+- Used to attach constructo to DOM. User must provide a string id as param: `"#app"`.
+- options can be provided: `clear:true` to clear html node before insert new constructo in it and `reverse:true` to attach constructo in top of html node.
+
+```javascript
+new $title({ text: "Simple title" }).create("#titles", {
+  clear: true,
+  reverse: true,
+});
+```
+
+#### constructoString()
+
+- When you need to put a constructo inside another constructo, use constructoString:
+
+```javascript
+import { $div, $div2 } from "./components.wcto";
+new $div({
+  content: new $div2({ content: "inner" }).constructoString(),
+}).create("#app");
 ```
