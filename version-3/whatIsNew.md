@@ -171,6 +171,8 @@ Now winnetoujs has more prop options
 
 ```javascript
 {{?display(set visibility of constructo):"flex"|"none"}}
+
+{{text?:string}}
 ```
 
 Use `:` to create types for props.
