@@ -284,6 +284,6 @@ We recommend you to use sass. Create this scripts in your package.json:
 
 Esbuild output use `esm` module imports, so you need to use type="module" when add script tag.
 
-### Clear output
+### Clear output bundles
 
 Clear output is discontinued, if you need a clean compilation, first delete dist folder
