@@ -4,6 +4,8 @@ applyTo: "**"
 
 # WinnetouJs Instructions
 
+Use this guide to create WinnetouJs web applications.
+
 ## How it works
 
 When WinnetouJs is installed, it provides a WBR.js file which is responsible to transpile wcto.html files into wcto.js files. User will write html components (called `constructos`) inside wcto.html file and WBR will compile it into reusable js classes which can be imported inside js/ts apps.
@@ -57,10 +59,19 @@ To obtain auto completions for constructos use this config in jsconfig.json (put
     "target": "es2022",
     "checkJs": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@libs/*": ["./libs/*"]
+    }
   },
   "exclude": ["node_modules", "**/node_modules/*"]
 }
+```
+
+- try to use paths whenever possible to keep code clean:
+
+```javascript
+import { someLib } from "@libs/myLib";
 ```
 
 ### NPM scripts
@@ -77,6 +88,14 @@ To maximize performance when compiling, add these settings to `package.json` fil
 - b: to bundle release
 - p: production mode
 - w: watch mode
+
+### `<script>` tag
+
+- when add compiled winnetoujs bundle into html index file, use `type="module"`
+
+```html
+<script type="module" src="/dist/app.winnetouBundle.min.js"></script>
+```
 
 ## Constructos
 
@@ -237,4 +256,299 @@ import { $div, $div2 } from "./components.wcto";
 new $div({
   content: new $div2({ content: "inner" }).constructoString(),
 }).create("#app");
+```
+
+## Mutables
+
+Mutables are localstorage variables that can change constructos state.
+
+- Use `W.setMutable("name","value")` to create a mutable
+- Use `W.getMutable("name")` to retrieve a mutable value
+- Use `W.setMutableNotPersistent("name","value")` to create mutables that will be not stored in client
+- Use `const name = W.initMutable("value")` to start a mutable that will be not stored in client.
+
+```javascript
+import { W } from "winnetoujs";
+
+W.setMutable("user", "john");
+console.log(W.getMutable("user")); // john
+
+const age = W.initMutable("18");
+console.log(W.getMutable(age)); // 18
+
+W.setMutable("user", "ana");
+console.log(W.getMutable("user")); // ana
+
+W.setMutableNotPersistent(age, "20");
+console.log(W.getMutable(age)); // 20
+```
+
+### Updating constructos with mutables
+
+- to use a mutable in a constructo prop do `{mutable:"mutable_name"}`:
+
+```javascript
+W.setMutable("title", "Hello World!");
+new $title({
+  text: { mutable: "title" },
+}).create("#app");
+```
+
+- Use setMutable again to auto update constructo:
+
+```javascript
+W.setMutable("title", "It's another title!"); // constructo will auto update it state to display new title
+```
+
+Another example:
+
+```javascript
+const address = W.initMutable("loading...");
+new $AddrCard({
+  addr: { mutable: address },
+}).create("#app");
+// simulate a fetch req:
+const updatedAddr = await get("/api/addr");
+W.setMutableNotPersistent(address, updatedAddr);
+```
+
+## FX
+
+- Use `W.fx()` to provide action to constructos, like `onclick` and `onchange`.
+
+```html
+<winnetou>
+  <button id="[[myBtn]]" onclick="{{onclick}}">Click me</button>
+</winnetou>
+```
+
+```javascript
+new $myBtn({
+  onclick: W.fx(() => {
+    console.log("button pressed");
+  }),
+}).create("#app");
+```
+
+- fx can receive args, like:
+
+```javascript
+new $myBtn({
+  onclick: W.fx(
+    (self, other) => {
+      self.style.color = "red";
+      document.getElementById(other).style.color = "blue";
+    },
+    "this",
+    "app"
+  ),
+}).create("#app");
+```
+
+- Use `"this"` when refers to constructo itself;
+
+## Translations
+
+Winnetou provides a module for internationalization.
+
+### Setting up translations
+
+Create your original language file as a js/ts file (not JSON) to enable Go To Reference functionality:
+
+```javascript
+import { W } from "winnetoujs";
+export default W.strings = {
+  title: "Hello Strings!",
+  buttonText: "Change Lang",
+  buttonText2: "Original Lang",
+};
+```
+
+This approach allows using F12 to navigate directly to strings and apply changes, with reverse F12 also working.
+
+### Loading translations
+
+Use the new `updateTranslations` method where `translationsPublicPath` is declared directly within the method:
+
+```javascript
+import { updateTranslations } from "winnetoujs/modules/translations";
+import strings from "./en-us";
+
+updateTranslations({
+  stringsClass: strings,
+  translationsPublicPath: "/app/translations",
+}).then(() => {
+  startApp();
+});
+
+async function startApp() {
+  new $myDiv({
+    text: strings.title,
+  }).create("#app");
+}
+```
+
+### Translation files structure
+
+- Place JSON translation files in `translationsPublicPath` folder.
+- Do not include the original language JSON file in `translationsPublicPath` to clear `localStorage` and load strings from winnetou.js itself for better efficiency
+
+- A example of `pt-br.json` translation file:
+
+```json
+{
+  "title": "Olá Strings!",
+  "buttonText": "Alterar idioma",
+  "buttonText2": "Idioma original"
+}
+```
+
+### Changing app language
+
+- Use `changeLang("pt-br", true);` to change language, provide the name of json file as param.
+
+```javascript
+import {
+  changeLang,
+  updateTranslations,
+} from "winnetoujs/modules/translations";
+
+changeLang("Japanese", true); // if you have Japanese.json file
+```
+
+To changeLang work, it must have a file called `spanish.json` inside `translationsPublicPath` with all string tokens.
+
+- the second parameter is to reload page after language update.
+
+## WinnetouJs Router
+
+WinnetouJs provides it own router system. Use it.
+
+- create a separated file called `router.ts` like example below:
+
+```javascript
+import { Router } from "winnetoujs/modules/router";
+export class MyRouter {
+  constructor() {
+    this.createRoutes();
+  }
+  private routes = {};
+  public methods = {
+    home: {
+      go: () => Router.navigate("/home"),
+      set: () => {
+        this.routes["/home"] = () => {
+          console.log("home route called");
+        };
+      },
+    },
+    settings: {
+      go: () => Router.navigate("/settings"),
+      set: () => {
+        this.routes["/settings"] = () => {
+          console.log("settings route called");
+        };
+      },
+    },
+  };
+  private createRoutes() {
+    Object.keys(this.methods).forEach(key => {
+      this.methods[key].set();
+    });
+    Router.createRoutes(this.routes, {
+      onGo(route) {
+        console.log("onGo", route);
+      },
+      onBack(route) {
+        console.log("onBack", route);
+      },
+    });
+  }
+}
+```
+
+- `onGo` and `onBack` will be called after router function. `route` param will return the route called.
+- Use router.ts like example below:
+
+```typescript
+import { W } from "winnetoujs";
+import { $div2 } from "./components.wcto";
+import { MyRouter } from "./router";
+const myRouter: MyRouter = new MyRouter();
+new $div2({
+  content: "home",
+  onclick: W.fx(() => {
+    myRouter.methods.home.go();
+  }),
+}).create("#app");
+new $div2({
+  content: "settings",
+  onclick: W.fx(() => {
+    myRouter.methods.settings.go();
+  }),
+}).create("#app");
+```
+
+## Color Themes
+
+WinnetouJs provides a module for color theming.
+
+- To use it, css (or scss) files must be a `:root` property, like:
+
+```css
+:root {
+  --primary: #f00;
+  --secondary: #0f0;
+}
+body,
+html {
+  background: var(--primary);
+  color: var(--secondary);
+  font-size: 30px;
+  padding: 100px;
+}
+```
+
+- import ColorThemes into a js/ts file:
+
+```javascript
+import { ColorThemes } from "winnetoujs/modules/colorThemes";
+```
+
+- Use `applySavedTheme()` method at application startup to always apply theme:
+
+```javascript
+ColorThemes.applySavedTheme();
+```
+
+- Create new themes using `newTheme` method:
+
+```javascript
+function darkTheme() {
+  ColorThemes.newTheme({
+    "--primary": "#000",
+    "--secondary": "#00f",
+  });
+}
+```
+
+## Select module
+
+Select module is a wrapper for common javascript functions and methods.
+
+- use select module to improve readability and performance in winnetoujs apps.
+
+- Refer to `select.instructions.md` for a complete guide to all winnetoujs select module.
+
+```javascript
+import { setCss } from "winnetoujs/modules/select";
+
+let btn = new $div2({
+  content: "settings",
+  onclick: W.fx(() => {
+    myRouter.methods.settings.go();
+  }),
+}).create("#app").ids.div2;
+
+setCss(btn, "color", "yellow");
 ```
