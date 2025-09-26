@@ -161,3 +161,35 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 ```
+
+## Partials
+
+To include partials use `loadPartial` method. This method will use cache to load partials in your ssr by default.
+
+```javascript
+// app.ts
+import { ssr, escapeHTML, loadPartial } from "winnetoujs/modules/ssr";
+import { $html, $simpleText } from "./index.wcto";
+export { $html, $simpleText, ssr, escapeHTML, loadPartial };
+```
+
+```javascript
+// index.js
+const {
+  $html,
+  $simpleText,
+  ssr,
+  loadPartial,
+} = require("./winnetou-ssr/dist/app.js");
+// ...
+let template = new $html({
+  content: ssr(
+    title,
+    list,
+    title2,
+    loadPartial("./docs/doc1.txt"),
+    loadPartial("./docs/doc2.txt")
+  ),
+}).constructoString();
+res.send(template);
+```
