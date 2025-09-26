@@ -200,3 +200,25 @@ let template = new $html({
 }).constructoString();
 res.send(template);
 ```
+
+## Lucide Icons
+
+To use lucide icons in server side render, install lucide-static package:
+
+```
+npm i lucide-static
+```
+
+Then use it like:
+
+```javascript
+const { ExternalLink, ArrowRight } = require("lucide-static");
+// ...
+new $footer({
+    currentYear: new Date().getFullYear(),
+    editLink: "",
+    iconArrowRight: ArrowRight,
+    iconExternalLink: ExternalLink,
+    nextLink: "",
+}).constructoString(),
+```
