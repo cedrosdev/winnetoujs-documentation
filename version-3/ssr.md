@@ -110,9 +110,13 @@ The `ssr` method receive an array of `constructoString` and concat it into a sin
 
 The `escapeHTML` method receives a string and escapes it.
 
-### Compiling with WBR
+### Compiling with WBR with --node (-n) option
 
-Use `node wbr -b` to compile `app.ts` to `dist` folder to import it in your server files. Note that we not recommend you to use --production flag because it makes bundle to lose their types.
+Use `node wbr -b -n` to compile `app.ts` to `dist` folder to import it in your server files. Note that we not recommend you to use --production flag because it makes bundle to lose their types.
+
+The new `--node` option will force build to use node platform when compiling winnetoujs files.
+
+You can use `--verbose` and `--watch` as well.
 
 ## Server side
 
