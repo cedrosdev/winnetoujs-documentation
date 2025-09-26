@@ -166,6 +166,13 @@ app.listen(port, () => {
 
 To include partials use `loadPartial` method. This method will use cache to load partials in your ssr by default.
 
+> loadPartial(
+> fileName: string,
+> options?: { verbose?: boolean }
+> ): string
+
+The `verbose` option will log when a partial was loaded from disk or from cache. Disable it in production.
+
 ```javascript
 // app.ts
 import { ssr, escapeHTML, loadPartial } from "winnetoujs/modules/ssr";
@@ -187,7 +194,7 @@ let template = new $html({
     title,
     list,
     title2,
-    loadPartial("./docs/doc1.txt"),
+    loadPartial("./docs/doc1.txt", { verbose: true }),
     loadPartial("./docs/doc2.txt")
   ),
 }).constructoString();
