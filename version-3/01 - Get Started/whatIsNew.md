@@ -287,3 +287,16 @@ Esbuild output use `esm` module imports, so you need to use type="module" when a
 ### Clear output bundles
 
 Clear output is discontinued, if you need a clean compilation, first delete dist folder
+
+## NPX Template
+
+We have created a npx template to create winnetou projects easily.
+
+```bash
+npx create-winnetou-app my-awesome-app
+cd my-awesome-app
+npm install
+npm run serve
+```
+
+Then open http://localhost:3123 to see your app.
