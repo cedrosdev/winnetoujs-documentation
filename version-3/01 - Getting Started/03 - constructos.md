@@ -840,14 +840,6 @@ const loginForm = new $loginForm(
 const formId = loginForm.ids.loginForm; // "loginForm-win-loginForm"
 ```
 
-## Next Steps
-
-Now that you understand constructos, you can explore:
-
-- **[State Management](04%20-%20state-management.md)** - Learn how to manage dynamic data with mutables
-- **[Styling Constructos](../03%20-%20Styling%20Constructos/01%20-%20sass.md)** - Style your constructos with Sass
-- **[WinnetouJs Router](../02%20-%20Routing%20System/01%20-%20using-winnetoujs-router.md)** - Build single-page applications with routing
-
 ## Summary
 
 Constructos are the foundation of WinnetouJs applications. Key takeaways:
