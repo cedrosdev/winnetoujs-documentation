@@ -143,7 +143,11 @@ export const dangerButton = wstyle({
 
 ```javascript
 import { $styledButton } from "./buttons.wcto";
-import { primaryButton, secondaryButton, dangerButton } from "./styles/buttonStyles";
+import {
+  primaryButton,
+  secondaryButton,
+  dangerButton,
+} from "./styles/buttonStyles";
 
 // Primary button
 new $styledButton({
@@ -410,6 +414,7 @@ export const themedButton = wstyle({
 ```
 
 This approach allows you to:
+
 - Change theme colors dynamically using the ColorThemes module
 - Maintain consistent spacing and sizing
 - Reduce duplication
@@ -447,7 +452,7 @@ const isActive = W.initMutable(false);
 // Create constructo with reactive style
 function createComponent() {
   const currentStyle = W.getMutable(isActive) ? activeState : normalState;
-  
+
   new $styledDiv({
     style: currentStyle,
     text: "Click to toggle",
@@ -549,7 +554,7 @@ import { wstyle } from "winnetoujs/modules/style";
 
 function getResponsiveCardStyle() {
   const isMobile = window.innerWidth < 768;
-  
+
   return wstyle({
     padding: isMobile ? "12px" : "20px",
     "font-size": isMobile ? "14px" : "16px",
@@ -574,6 +579,7 @@ window.addEventListener("resize", () => {
 Create small, single-purpose style objects rather than large, monolithic ones:
 
 ✅ **Good:**
+
 ```javascript
 export const flexCenter = wstyle({
   display: "flex",
@@ -591,6 +597,7 @@ export const roundedCorners = wstyle({
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 export const everythingStyle = wstyle({
   display: "flex",
@@ -610,17 +617,31 @@ export const everythingStyle = wstyle({
 Name your styles based on their purpose, not their appearance:
 
 ✅ **Good:**
+
 ```javascript
-export const primaryActionButton = wstyle({ /* ... */ });
-export const navigationMenuItem = wstyle({ /* ... */ });
-export const errorMessageText = wstyle({ /* ... */ });
+export const primaryActionButton = wstyle({
+  /* ... */
+});
+export const navigationMenuItem = wstyle({
+  /* ... */
+});
+export const errorMessageText = wstyle({
+  /* ... */
+});
 ```
 
 ❌ **Avoid:**
+
 ```javascript
-export const blueButton = wstyle({ /* ... */ });
-export const smallText = wstyle({ /* ... */ });
-export const redDiv = wstyle({ /* ... */ });
+export const blueButton = wstyle({
+  /* ... */
+});
+export const smallText = wstyle({
+  /* ... */
+});
+export const redDiv = wstyle({
+  /* ... */
+});
 ```
 
 ### 3. Prefer CSS/Sass for Static Styles
@@ -628,6 +649,7 @@ export const redDiv = wstyle({ /* ... */ });
 Use WStyle only for dynamic or component-specific styles. For global styles, use CSS/Sass:
 
 **Use CSS/Sass for:**
+
 - Global resets and base styles
 - Typography scales
 - Color palettes
@@ -635,6 +657,7 @@ Use WStyle only for dynamic or component-specific styles. For global styles, use
 - Complex animations
 
 **Use WStyle for:**
+
 - Component-specific styles
 - Dynamic style variations
 - Conditional styling
@@ -649,17 +672,17 @@ export const complexCard = wstyle({
   // Positioning
   position: "relative",
   "z-index": "10", // Above background elements
-  
+
   // Layout
   display: "flex",
   "flex-direction": "column",
   gap: "12px",
-  
+
   // Appearance
   "background-color": "white",
   "border-radius": "8px",
   "box-shadow": "0 2px 8px rgba(0, 0, 0, 0.1)",
-  
+
   // Interaction
   cursor: "pointer",
   transition: "transform 0.2s ease, box-shadow 0.2s ease",
@@ -671,11 +694,13 @@ export const complexCard = wstyle({
 WStyle objects don't support nesting like Sass. Keep styles flat:
 
 ❌ **This won't work:**
+
 ```javascript
 const invalid = wstyle({
   ".card": {
     padding: "20px",
-    "&:hover": { // Pseudo-classes not supported
+    "&:hover": {
+      // Pseudo-classes not supported
       transform: "scale(1.05)",
     },
   },
@@ -683,6 +708,7 @@ const invalid = wstyle({
 ```
 
 ✅ **Create separate styles instead:**
+
 ```javascript
 const card = wstyle({
   padding: "20px",
@@ -690,9 +716,9 @@ const card = wstyle({
 });
 
 // Handle hover with JavaScript event
-onclick: W.fx((self) => {
+onclick: W.fx(self => {
   self.style.transform = "scale(1.05)";
-}, "this")
+}, "this");
 ```
 
 ### 6. Monitor Bundle Size
@@ -705,6 +731,7 @@ ls -lh dist/js/*.js
 ```
 
 If bundle size becomes a concern:
+
 - Migrate frequently-used styles to CSS/Sass
 - Remove unused style definitions
 - Consider code splitting for large style collections
@@ -716,7 +743,9 @@ If bundle size becomes a concern:
 **Issue:** WStyle object not rendering correctly.
 
 **Solutions:**
+
 1. Ensure the style is passed correctly to the constructo prop:
+
    ```javascript
    new $component({
      style: myStyle, // Not "myStyle" as string
@@ -724,6 +753,7 @@ If bundle size becomes a concern:
    ```
 
 2. Check for CSS property name errors (use quotes for hyphenated properties):
+
    ```javascript
    "background-color": "#fff", // ✅ Correct
    backgroundColor: "#fff",    // ❌ Won't work
@@ -757,6 +787,7 @@ If bundle size becomes a concern:
 **Issue:** Application bundle is too large due to WStyle usage.
 
 **Solutions:**
+
 1. Move static styles to CSS/Sass files
 2. Use CSS custom properties with WStyle for dynamic values
 3. Implement code splitting for style modules
@@ -788,12 +819,14 @@ If bundle size becomes a concern:
 The best approach is often a combination:
 
 **CSS/Sass for:**
+
 - Base styles, resets, typography
 - Layout grids and responsive breakpoints
 - Common component styles
 - Animations
 
 **WStyle for:**
+
 - Dynamic variations
 - Conditional styling
 - Component-specific overrides
