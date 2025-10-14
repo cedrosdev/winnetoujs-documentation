@@ -18,12 +18,14 @@ WinnetouJs provides a powerful, built-in translation module for internationalizi
 ## Why Use WinnetouJs Translations?
 
 **Traditional Approach Problems:**
+
 - JSON-based original language makes navigation difficult
 - No IDE support for finding string usage
 - Complex setup and configuration
 - Multiple dependencies required
 
 **WinnetouJs Solution:**
+
 - JavaScript/TypeScript file for base language (IDE support)
 - F12 to navigate between strings and usage
 - Simple, streamlined API
@@ -35,7 +37,10 @@ WinnetouJs provides a powerful, built-in translation module for internationalizi
 The translations module is included with WinnetouJs. Simply import it:
 
 ```javascript
-import { updateTranslations, changeLang } from "winnetoujs/modules/translations";
+import {
+  updateTranslations,
+  changeLang,
+} from "winnetoujs/modules/translations";
 ```
 
 ## Basic Setup
@@ -53,25 +58,25 @@ export default W.strings = {
   // App general
   appTitle: "My Awesome App",
   appDescription: "A powerful application built with WinnetouJs",
-  
+
   // Navigation
   home: "Home",
   about: "About",
   contact: "Contact",
   settings: "Settings",
-  
+
   // Actions
   save: "Save",
   cancel: "Cancel",
   delete: "Delete",
   edit: "Edit",
   submit: "Submit",
-  
+
   // Messages
   welcomeMessage: "Welcome back!",
   successMessage: "Operation completed successfully",
   errorMessage: "An error occurred",
-  
+
   // Buttons
   buttonText: "Change Language",
   buttonText2: "Original Language",
@@ -79,6 +84,7 @@ export default W.strings = {
 ```
 
 **Why JS/TS instead of JSON?**
+
 - **F12 Navigation**: Jump directly to string definitions and find all usages
 - **Reverse F12**: See where strings are used throughout your codebase
 - **Better IDE Support**: Autocomplete, refactoring, and type checking
@@ -106,7 +112,7 @@ updateTranslations({
 async function startApp() {
   // Your app initialization code
   console.log(strings.appTitle); // "My Awesome App"
-  
+
   new $header({
     title: strings.appTitle,
   }).create("#app");
@@ -114,6 +120,7 @@ async function startApp() {
 ```
 
 **Parameters:**
+
 - `stringsClass`: Your base language object (imported from your JS/TS file)
 - `translationsPublicPath`: Public path where JSON translation files are served
 
@@ -299,7 +306,7 @@ class ContactForm {
       messagePlaceholder: strings.messagePlaceholder,
       submitButton: strings.submitButton,
       cancelButton: strings.cancelButton,
-      onsubmit: W.fx((e) => {
+      onsubmit: W.fx(e => {
         e.preventDefault();
         this.handleSubmit(e);
       }, "this"),
@@ -339,10 +346,12 @@ changeLang("fr-fr", true);
 ```
 
 **Parameters:**
+
 - `languageCode` (string): The name of the JSON file (without `.json` extension)
 - `reloadPage` (boolean): Whether to reload the page after language change
 
 **How it works:**
+
 1. Loads the specified JSON file from `translationsPublicPath`
 2. Updates all strings in the `strings` object
 3. Saves the language preference to localStorage
@@ -386,7 +395,7 @@ class LanguageSelector {
       { code: "fr-fr", name: "Français" },
       { code: "de-de", name: "Deutsch" },
     ];
-    
+
     this.render();
   }
 
@@ -411,7 +420,7 @@ class LanguageSelector {
     new $languageSelector({
       label: strings.languageLabel || "Language:",
       options: optionsHTML,
-      onchange: W.fx((self) => {
+      onchange: W.fx(self => {
         const selectedLang = self.value;
         if (selectedLang !== currentLang) {
           changeLang(selectedLang, true);
@@ -548,10 +557,10 @@ export default W.strings = {
 import strings from "./translations/en-us";
 
 // Access nested strings
-console.log(strings.nav.home);           // "Home"
-console.log(strings.auth.login);         // "Login"
+console.log(strings.nav.home); // "Home"
+console.log(strings.auth.login); // "Login"
 console.log(strings.products.addToCart); // "Add to Cart"
-console.log(strings.errors.generic);     // "An error occurred"
+console.log(strings.errors.generic); // "An error occurred"
 ```
 
 **Translation file with nested structure:**
@@ -607,11 +616,12 @@ For strings that need dynamic values, use template literals:
 export default W.strings = {
   // Static strings
   welcome: "Welcome",
-  
+
   // Functions for dynamic strings
-  greetUser: (name) => `Hello, ${name}!`,
-  itemCount: (count) => `You have ${count} item${count !== 1 ? 's' : ''}`,
-  timeRemaining: (minutes) => `${minutes} minute${minutes !== 1 ? 's' : ''} remaining`,
+  greetUser: name => `Hello, ${name}!`,
+  itemCount: count => `You have ${count} item${count !== 1 ? "s" : ""}`,
+  timeRemaining: minutes =>
+    `${minutes} minute${minutes !== 1 ? "s" : ""} remaining`,
   priceDisplay: (price, currency) => `${currency}${price.toFixed(2)}`,
 };
 ```
@@ -627,12 +637,12 @@ const timeLeft = 10;
 const productPrice = 29.99;
 
 new $greeting({
-  text: strings.greetUser(userName),        // "Hello, John!"
+  text: strings.greetUser(userName), // "Hello, John!"
 }).create("#app");
 
 new $cartSummary({
-  items: strings.itemCount(itemCount),      // "You have 5 items"
-  time: strings.timeRemaining(timeLeft),    // "10 minutes remaining"
+  items: strings.itemCount(itemCount), // "You have 5 items"
+  time: strings.timeRemaining(timeLeft), // "10 minutes remaining"
   price: strings.priceDisplay(productPrice, "$"), // "$29.99"
 }).create("#app");
 ```
@@ -660,9 +670,9 @@ export function pluralize(count, word, pluralForm = null) {
 import { pluralize } from "../utils/i18n";
 
 export default W.strings = {
-  items: (count) => `${count} ${pluralize(count, 'item')}`,
-  people: (count) => `${count} ${pluralize(count, 'person', 'people')}`,
-  child: (count) => `${count} ${pluralize(count, 'child', 'children')}`,
+  items: count => `${count} ${pluralize(count, "item")}`,
+  people: count => `${count} ${pluralize(count, "person", "people")}`,
+  child: count => `${count} ${pluralize(count, "child", "children")}`,
 };
 ```
 
@@ -721,7 +731,10 @@ To change language without reloading the page, you need to manually re-render yo
 
 ```javascript
 import { W } from "winnetoujs";
-import { changeLang, updateTranslations } from "winnetoujs/modules/translations";
+import {
+  changeLang,
+  updateTranslations,
+} from "winnetoujs/modules/translations";
 import strings from "./translations/en-us";
 
 class App {
@@ -734,7 +747,7 @@ class App {
       stringsClass: strings,
       translationsPublicPath: "/translations",
     });
-    
+
     this.render();
   }
 
@@ -749,7 +762,7 @@ class App {
   async changeLanguage(langCode) {
     // Change language without reload
     await changeLang(langCode, false);
-    
+
     // Re-render the entire app
     this.render();
   }
@@ -762,7 +775,7 @@ const app = new App();
 
 ```javascript
 new $languageSelector({
-  onchange: W.fx((self) => {
+  onchange: W.fx(self => {
     app.changeLanguage(self.value);
   }, "this"),
 }).create("#header");
@@ -822,11 +835,11 @@ Ensure all translation JSON files have the same keys as your base language:
 ```javascript
 function validateTranslations(baseStrings, translationJSON) {
   const missing = [];
-  
+
   function checkKeys(base, translation, path = "") {
     for (const key in base) {
       const currentPath = path ? `${path}.${key}` : key;
-      
+
       if (typeof base[key] === "object" && base[key] !== null) {
         if (!translation[key]) {
           missing.push(currentPath);
@@ -840,7 +853,7 @@ function validateTranslations(baseStrings, translationJSON) {
       }
     }
   }
-  
+
   checkKeys(baseStrings, translationJSON);
   return missing;
 }
@@ -874,10 +887,10 @@ Add comments to clarify string usage:
 export default W.strings = {
   // Button shown on login page
   loginButton: "Login",
-  
+
   // Greeting message on dashboard
   welcomeMessage: "Welcome back!",
-  
+
   // Error shown when email format is invalid
   errorInvalidEmail: "Please enter a valid email address",
 };
@@ -924,7 +937,7 @@ async function changeLanguageWithLoading(langCode) {
 
   try {
     await changeLang(langCode, false);
-    
+
     // Re-render app
     renderApp();
   } catch (error) {
@@ -942,21 +955,23 @@ async function changeLanguageWithLoading(langCode) {
 function detectBrowserLanguage() {
   const browserLang = navigator.language || navigator.userLanguage;
   const langCode = browserLang.toLowerCase();
-  
+
   // Map browser language codes to your supported languages
   const languageMap = {
-    "en": "en-us",
+    en: "en-us",
     "en-us": "en-us",
     "en-gb": "en-us",
-    "pt": "pt-br",
+    pt: "pt-br",
     "pt-br": "pt-br",
-    "es": "es-es",
+    es: "es-es",
     "es-es": "es-es",
-    "fr": "fr-fr",
-    "de": "de-de",
+    fr: "fr-fr",
+    de: "de-de",
   };
-  
-  return languageMap[langCode] || languageMap[langCode.split("-")[0]] || "en-us";
+
+  return (
+    languageMap[langCode] || languageMap[langCode.split("-")[0]] || "en-us"
+  );
 }
 
 // Use on first app load
@@ -978,11 +993,11 @@ function isRTL(langCode) {
 
 async function changeLanguageWithDirection(langCode) {
   await changeLang(langCode, false);
-  
+
   // Update HTML direction
   document.documentElement.dir = isRTL(langCode) ? "rtl" : "ltr";
   document.documentElement.lang = langCode;
-  
+
   // Re-render app
   renderApp();
 }
@@ -997,6 +1012,7 @@ async function changeLanguageWithDirection(langCode) {
 **Solutions:**
 
 1. Verify `translationsPublicPath` is correct and accessible:
+
    ```javascript
    updateTranslations({
      stringsClass: strings,
@@ -1005,6 +1021,7 @@ async function changeLanguageWithDirection(langCode) {
    ```
 
 2. Ensure JSON files are in the correct location:
+
    ```
    public/translations/pt-br.json  ✅
    src/translations/pt-br.json     ❌
@@ -1021,6 +1038,7 @@ async function changeLanguageWithDirection(langCode) {
 **Solutions:**
 
 1. Use `reloadPage: true` parameter:
+
    ```javascript
    changeLang("pt-br", true); // true = reload page
    ```
@@ -1038,6 +1056,7 @@ async function changeLanguageWithDirection(langCode) {
 **Solutions:**
 
 1. Ensure all keys exist in translation JSON files:
+
    ```json
    {
      "home": "Início",
@@ -1046,14 +1065,15 @@ async function changeLanguageWithDirection(langCode) {
    ```
 
 2. Check for typos in key names (case-sensitive):
+
    ```javascript
-   strings.homePage  // ❌ Wrong
-   strings.home      // ✅ Correct
+   strings.homePage; // ❌ Wrong
+   strings.home; // ✅ Correct
    ```
 
 3. Verify nested keys are properly structured:
    ```javascript
-   strings.nav.home  // Requires nav: { home: "..." }
+   strings.nav.home; // Requires nav: { home: "..." }
    ```
 
 ### Base Language Not Working
@@ -1063,14 +1083,16 @@ async function changeLanguageWithDirection(langCode) {
 **Solutions:**
 
 1. Ensure you're exporting `W.strings` correctly:
+
    ```javascript
    import { W } from "winnetoujs";
    export default W.strings = { ... };  // ✅
    ```
 
 2. Verify import in app file:
+
    ```javascript
-   import strings from "./translations/en-us";  // ✅
+   import strings from "./translations/en-us"; // ✅
    ```
 
 3. Check that `updateTranslations()` is called before using strings:
@@ -1086,6 +1108,7 @@ async function changeLanguageWithDirection(langCode) {
 Initializes the translation system with your base language and configuration.
 
 **Parameters:**
+
 - `config` (Object):
   - `stringsClass` (Object): Your base language object
   - `translationsPublicPath` (String): Public path where JSON files are served
@@ -1093,6 +1116,7 @@ Initializes the translation system with your base language and configuration.
 **Returns:** `Promise<void>`
 
 **Usage:**
+
 ```javascript
 await updateTranslations({
   stringsClass: strings,
@@ -1105,14 +1129,16 @@ await updateTranslations({
 Changes the application language.
 
 **Parameters:**
+
 - `languageCode` (String): Language code matching JSON filename (without `.json`)
 - `reloadPage` (Boolean): Whether to reload the page after language change
 
 **Returns:** `Promise<void>`
 
 **Usage:**
+
 ```javascript
-await changeLang("pt-br", true);  // Changes to Portuguese and reloads
+await changeLang("pt-br", true); // Changes to Portuguese and reloads
 await changeLang("es-es", false); // Changes to Spanish without reload
 ```
 
