@@ -165,6 +165,12 @@ Add the following scripts to your `package.json` file:
 
 You can install the [WinnetouJs3 VSCode Extension](https://marketplace.visualstudio.com/items?itemName=cedros-development.vscode-winnetoujs3) to get goto constructo functionality. It will help you to navigate through your constructos files easily. Just press `Ctrl` and click on the constructo name to open the corresponding `.wcto.html` file.
 
-## Next Steps
+## NPX Templates
 
-Now you able to start building your WinnetouJs application by editing the files in the `src` directory and creating your first constructos in `.wcto.html` files.
+Npx `create-winnetoujs-app` has several templates to choose from. You can specify a template using the `--template` or `-t` flag.
+
+### Node SSR Typescript Template
+
+```bash
+npx create-winnetoujs-app my-ssr-app --template node-ssr-ts
+```
