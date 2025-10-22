@@ -34,7 +34,7 @@ WStyle is ideal for:
 First, import the `wstyle` function from the WinnetouJs style module:
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 ```
 
 ### Creating a Style Object
@@ -42,7 +42,7 @@ import { wstyle } from "winnetoujs/modules/style";
 Define your styles using the `wstyle()` function, which accepts a CSS-like object:
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const buttonStyle = wstyle({
   padding: "10px 20px",
@@ -93,7 +93,7 @@ For better organization, create a dedicated file for your style definitions:
 **`src/styles/buttonStyles.js`**
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const primaryButton = wstyle({
   padding: "12px 24px",
@@ -180,7 +180,7 @@ src/
 **`src/components/menu/menuStyles.js`**
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const leftMenu = wstyle({
   width: "100%",
@@ -239,7 +239,7 @@ export class Menu {
 ### Layout Styles
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const flexCenter = wstyle({
   display: "flex",
@@ -268,7 +268,7 @@ export const gridContainer = wstyle({
 ### Card Styles
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const card = wstyle({
   "background-color": "white",
@@ -295,7 +295,7 @@ export const cardBody = wstyle({
 ### Form Styles
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const inputField = wstyle({
   width: "100%",
@@ -323,7 +323,7 @@ export const formGroup = wstyle({
 Create dynamic styles by wrapping `wstyle()` in a function:
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export function createButtonStyle(backgroundColor, textColor) {
   return wstyle({
@@ -393,7 +393,7 @@ For maximum flexibility, combine WStyle with CSS custom properties (variables):
 **`styles/buttonStyles.js`**
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 export const themedButton = wstyle({
   padding: "var(--spacing-md) var(--spacing-lg)",
@@ -419,7 +419,7 @@ Combine WStyle with WinnetouJs mutables for reactive styling:
 
 ```javascript
 import { W } from "winnetoujs";
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 import { $styledDiv } from "./components.wcto";
 
 // Create different style states
@@ -466,7 +466,7 @@ createComponent();
 Combine multiple style objects (note: this requires manual merging):
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 const baseButton = {
   padding: "12px 24px",
@@ -504,7 +504,7 @@ export const largeButton = wstyle({
 Apply styles based on conditions:
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 function getButtonStyle(variant, size) {
   const baseStyle = {
@@ -543,7 +543,7 @@ const dangerSmall = getButtonStyle("danger", "small");
 While WStyle doesn't support media queries directly, you can create responsive behaviors with JavaScript:
 
 ```javascript
-import { wstyle } from "winnetoujs/modules/style";
+import { wstyle } from "winnetoujs/modules/wstyle";
 
 function getResponsiveCardStyle() {
   const isMobile = window.innerWidth < 768;
@@ -831,7 +831,7 @@ WStyle provides a flexible, JavaScript-native way to define and apply styles in 
 
 **Key Takeaways:**
 
-- Use `wstyle()` from `winnetoujs/modules/style` to create style objects
+- Use `wstyle()` from `winnetoujs/modules/wstyle` to create style objects
 - Apply styles using the `style` prop in constructos
 - Organize styles in dedicated files for better maintainability
 - Combine with CSS variables for dynamic theming
