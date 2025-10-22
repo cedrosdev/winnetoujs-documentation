@@ -4,14 +4,7 @@
 
 WStyle is a JavaScript-based styling methodology for WinnetouJs applications that allows you to define CSS styles as JavaScript objects. It provides a way to create reusable, type-safe style definitions that can be applied directly to constructos without writing separate CSS files.
 
-**Key Features:**
-
-- 🎨 Define styles as JavaScript objects
-- 🔄 Reusable style definitions
-- 📦 Export and import styles across files
-- 🎯 Direct integration with constructos
-- ⚡ No separate CSS compilation needed
-- 🔍 Full IDE support with autocomplete
+WStyle is tiny javascript function that converts JavaScript objects into inline styles for constructos. It is particularly useful for dynamic styling, component-specific styles, and rapid prototyping.
 
 **Important Consideration:**
 
