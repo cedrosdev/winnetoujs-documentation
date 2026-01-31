@@ -24,8 +24,8 @@ Then import the constructos in your javascript code:
 // app.ts
 
 import { $fixedText, $dynamicText } from "./myConstructos.wcto";
-$fixedText().create("#app");
-$dynamicText({
+new $fixedText().create("#app");
+new $dynamicText({
   text: "This is a dynamic text paragraph.",
 }).create("#app");
 ```
