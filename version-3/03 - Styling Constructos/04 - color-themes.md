@@ -57,7 +57,8 @@ First, define your color palette using CSS custom properties in the `:root` sele
 body {
   background: var(--background);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .card {
@@ -90,7 +91,7 @@ body {
 
 ### 2. Apply Saved Theme at Startup
 
-Call `applySavedTheme()` when your application starts to restore the user's previously selected theme. This method returns a promise, so use `await` or `.then()`:
+Call `applySavedTheme()` when your application starts to restore the user's previously selected theme.
 
 **`app.ts`**
 
@@ -98,8 +99,8 @@ Call `applySavedTheme()` when your application starts to restore the user's prev
 import { W } from "winnetoujs";
 import { ColorThemes } from "winnetoujs/modules/colorThemes";
 
-// Apply saved theme at startup (using await)
-await ColorThemes.applySavedTheme();
+// Apply saved theme at startup
+ColorThemes.applySavedTheme();
 
 // Then start your app
 async function startApp() {
@@ -108,22 +109,6 @@ async function startApp() {
 }
 
 startApp();
-```
-
-**Alternative with .then():**
-
-```javascript
-import { ColorThemes } from "winnetoujs/modules/colorThemes";
-
-// Apply saved theme at startup (using .then)
-ColorThemes.applySavedTheme().then(() => {
-  startApp();
-});
-
-function startApp() {
-  // Your app initialization code
-  console.log("App started with saved theme");
-}
 ```
 
 ## Creating Themes
@@ -395,7 +380,7 @@ class Settings {
 
     // Create options HTML
     const optionsHTML = Object.keys(themes)
-      .map(key => {
+      .map((key) => {
         return new $themeOption({
           value: key,
           label: themes[key].name,
@@ -406,7 +391,7 @@ class Settings {
 
     new $themeSelector({
       options: optionsHTML,
-      onchange: W.fx(self => {
+      onchange: W.fx((self) => {
         applyTheme(self.value);
       }, "this"),
     }).create("#settings");
@@ -444,7 +429,7 @@ export class ThemeManager {
 
   static applySystemTheme() {
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
 
     if (prefersDark) {
@@ -457,7 +442,7 @@ export class ThemeManager {
   static watchSystemTheme() {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    mediaQuery.addEventListener("change", e => {
+    mediaQuery.addEventListener("change", (e) => {
       if (e.matches) {
         this.darkTheme();
       } else {
@@ -490,8 +475,11 @@ Add CSS transitions for smooth color changes:
 
 /* Add transitions to elements */
 * {
-  transition: background-color 0.3s ease, color 0.3s ease,
-    border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* Disable transitions on theme switch for instant change (optional) */
@@ -644,10 +632,10 @@ function lighten(color, percent) {
   const rgb = hexToRgb(color);
   const amt = Math.round(2.55 * percent);
   return `#${[rgb.r, rgb.g, rgb.b]
-    .map(c =>
+    .map((c) =>
       Math.min(255, c + amt)
         .toString(16)
-        .padStart(2, "0")
+        .padStart(2, "0"),
     )
     .join("")}`;
 }
@@ -656,10 +644,10 @@ function darken(color, percent) {
   const rgb = hexToRgb(color);
   const amt = Math.round(2.55 * percent);
   return `#${[rgb.r, rgb.g, rgb.b]
-    .map(c =>
+    .map((c) =>
       Math.max(0, c - amt)
         .toString(16)
-        .padStart(2, "0")
+        .padStart(2, "0"),
     )
     .join("")}`;
 }
