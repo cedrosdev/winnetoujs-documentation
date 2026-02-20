@@ -20,7 +20,7 @@ WinnetouJs provides specific compiler flags for Node.js environments:
 Use the `-n` or `--node` flag to compile for Node.js using CommonJS format:
 
 ```bash
-wbr -b -n -p
+node wbr -b -n -p
 ```
 
 This generates code using `module.exports` and `require()`.
@@ -30,7 +30,7 @@ This generates code using `module.exports` and `require()`.
 Use the `-e` or `--node-esm` flag to compile for Node.js using ES Module format:
 
 ```bash
-wbr -b -e -p
+node wbr -b -e -p
 ```
 
 This generates code using `export` and `import` statements.
@@ -64,6 +64,40 @@ Your server's `tsconfig.json` or `jsconfig.json` must include `allowJs: true` to
 ```
 
 The `allowJs` option is essential for importing WinnetouJs constructos in your Node.js server.
+
+In `win.config.json`, ensure you specify the correct output directory and source folder for your constructos:
+
+```json
+{
+  "apps": ["./src/app.ts"],
+  "outputDir": "./dist",
+  "constructosSourceFolder": "./src"
+}
+```
+
+In `package.json`, include the necessary dependencies for your server:
+
+```json
+{
+  "scripts": {
+    "winnetou": "node wbr -b -n -v -w",
+    "sass:prod": "sass sass/main.scss:dist/css/main.min.css --style compressed --no-source-map --quiet --load-path='./src'",
+    "types": "tsc src/app.ts --declaration --emitDeclarationOnly --outDir dist --module nodenext --target es2022"
+  },
+  "dependencies": {
+    "typescript": "^4.9.5",
+    "express": "^4.18.2",
+    "winnetoujs": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.18"
+  }
+}
+```
+
+> [!IMPORTANT]
+> ⚠️ **WARNING**: In order to use suggestions when importing constructos, you must have `typescript` installed as a dependency in your project and run `npm run types` to generate the declaration files in the `dist` folder. This allows your server code to have proper type definitions for the imported constructos. Ensure `dist` is the same as the `outputDir` specified in your `win.config.json`.
 
 ## Project Structure
 
@@ -221,7 +255,7 @@ app.get("/docs/:route", async (req, res) => {
 
   // Load content from file
   const content = loadPartial(
-    path.join(__dirname, `./views/docs/${routeName}.html`)
+    path.join(__dirname, `./views/docs/${routeName}.html`),
   );
 
   // Check if file exists
@@ -237,12 +271,12 @@ app.get("/docs/:route", async (req, res) => {
   ];
 
   const menuHTML = menuItems
-    .map(item =>
+    .map((item) =>
       new $menuItem({
         href: item.href,
         text: item.text,
         class: item.href.includes(routeName) ? "active" : "",
-      }).constructoString()
+      }).constructoString(),
     )
     .join("");
 
@@ -298,7 +332,7 @@ const app = express();
 
 app.get("/docs/:route", async (req, res) => {
   const content = loadPartial(
-    path.join(__dirname, `./views/docs/${req.params.route}.html`)
+    path.join(__dirname, `./views/docs/${req.params.route}.html`),
   );
 
   const html = new $html({
@@ -409,7 +443,7 @@ joinConstructos(...parts: any[]): string
 const combinedHTML = joinConstructos(
   new $header({ title: "Welcome" }).constructoString(),
   new $content({ text: "Main content" }).constructoString(),
-  new $footer({ year: 2024 }).constructoString()
+  new $footer({ year: 2024 }).constructoString(),
 );
 ```
 
@@ -425,7 +459,7 @@ const sections = [
 const page = joinConstructos(
   "<header>Header</header>",
   sections,
-  "<footer>Footer</footer>"
+  "<footer>Footer</footer>",
 );
 
 // Nested arrays are automatically flattened
@@ -443,7 +477,7 @@ const components = joinConstructos(header, [sidebar, [content, aside]], footer);
 const emailHTML = joinConstructos(
   new $emailHeader({ logo: logoURL }).constructoString(),
   new $emailBody({ content: message }).constructoString(),
-  new $emailFooter({ unsubscribeLink }).constructoString()
+  new $emailFooter({ unsubscribeLink }).constructoString(),
 );
 
 sendEmail(emailHTML);
@@ -458,12 +492,12 @@ app.get("/products", async (req, res) => {
   const products = await getProductsFromDatabase();
 
   const productCards = products
-    .map(product =>
+    .map((product) =>
       new $productCard({
         name: product.name,
         price: product.price,
         image: product.image,
-      }).constructoString()
+      }).constructoString(),
     )
     .join("");
 
@@ -580,9 +614,9 @@ async function renderMenu(currentFolder, currentFile) {
   let foundCurrent = false;
 
   const renderedMenu = menu
-    .map(folder => {
+    .map((folder) => {
       const items = folder.files
-        .map(file => {
+        .map((file) => {
           const isActive =
             folder.folder === currentFolder && file.name === currentFile;
 
@@ -604,7 +638,7 @@ async function renderMenu(currentFolder, currentFile) {
 
       return joinConstructos(
         new $menuTitle({ title: folder.folder }).constructoString(),
-        items
+        items,
       );
     })
     .join("");
@@ -633,7 +667,7 @@ app.get("/docs/:route", async (req, res) => {
         }).constructoString();
 
         const content = loadPartial(
-          path.join(__dirname, `./views/docs/${req.params.route}.html`)
+          path.join(__dirname, `./views/docs/${req.params.route}.html`),
         );
 
         const footer = new $footer({
@@ -652,7 +686,7 @@ app.get("/docs/:route", async (req, res) => {
           canonicalPath: `/docs/${req.params.route}`,
           metaDescription: removeHTMLTags(content.substring(0, 155)).replace(
             /\n/g,
-            " "
+            " ",
           ),
           metaTitle: `${file.name} - WinnetouJs`,
           title: `Documentation - ${file.name}`,
@@ -753,7 +787,7 @@ const pageHTML = joinConstructos(
   new $header().constructoString(),
   new $sidebar().constructoString(),
   new $mainContent().constructoString(),
-  new $footer().constructoString()
+  new $footer().constructoString(),
 );
 ```
 
@@ -784,7 +818,7 @@ app.get("/large-page", (req, res) => {
 
   // Stream large content in chunks
   const chunks = getLargeContent();
-  chunks.forEach(chunk => {
+  chunks.forEach((chunk) => {
     res.write(new $contentChunk({ content: chunk }).constructoString());
   });
 
