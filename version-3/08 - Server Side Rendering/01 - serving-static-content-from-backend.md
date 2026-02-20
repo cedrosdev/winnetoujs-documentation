@@ -97,7 +97,7 @@ In `package.json`, include the necessary dependencies for your server:
 ```
 
 > [!IMPORTANT]
-> ⚠️ **WARNING**: In order to use suggestions when importing constructos, you must have `typescript` installed as a dependency in your project and run `npm run types` to generate the declaration files in the `dist` folder. This allows your server code to have proper type definitions for the imported constructos. Ensure `dist` is the same as the `outputDir` specified in your `win.config.json`.
+> ⚠️ **WARNING**: In order to use suggestions when importing constructos, you must have `typescript` installed as a dependency in your project and run `npm run types` to generate the declaration files in the `dist` folder. This allows your server code to have proper type definitions for the imported constructos. Ensure `dist` is the same as the `outputDir` specified in your `win.config.json`. If suggestions are not working, restart your code editor after running the types generation command.
 
 ## Project Structure
 
