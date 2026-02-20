@@ -11,6 +11,19 @@ Server-side rendering with WinnetouJs works by compiling your constructos in a N
 - **Better Performance**: Reduced client-side processing on initial page load
 - **Progressive Enhancement**: Your application works even with JavaScript disabled
 
+## Create a WinnetouJs SSR Project
+
+Use `npx create-winnetoujs-app` to create a full WinnetouJs project with SSR. Use the flag `--template` to specify the SSR template:
+
+```bash
+npx create-winnetoujs-app My-Awesome-App --template node-ssr-ts
+```
+
+This will scaffold a full node typescript express server with winnetoujs SSR support. You can code from there or use the generated project as a reference for your own custom SSR setup.
+
+The official repo of the SSR template can be found here:
+https://github.com/cedrosdev/create-winnetoujs-app
+
 ## WBR Compiler Options for SSR
 
 WinnetouJs provides specific compiler flags for Node.js environments:
@@ -140,6 +153,16 @@ Create `win.config.json`:
 ### Step 2: Create Constructos
 
 Create your constructos in `.wcto.html` files as usual:
+
+> [!IMPORTANT]
+> ⚠️ **WARNING**: When creating a entire html constructo, ensure to include `<!DOCTYPE html>` when server send the response.
+
+```javascript
+response.send(`
+  <!DOCTYPE html>
+  ${page}
+`);
+```
 
 **docs-template.wcto.html:**
 
